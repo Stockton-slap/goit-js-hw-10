@@ -45,10 +45,12 @@ function renderOneCountryMarkup({
 }) {
   const langs = Object.values(languages).join(', ');
 
-  const markup = `<h1>${name.official}</h1>
-        <p><b>Capital: ${capital}</b></p>
-        <p><b>Population: ${population} </b></p>
-        <p><b>Languages: ${langs}</b></p>`;
+  const markup = `<div style="display:flex;align-items:center;"><img style="margin-right:10px;" src="${flags.svg}" alt="${name.official} weight="20" height="20" />
+<h1 style="margin:0;">${name.official}</h1></div>
+<p><b>Capital: ${capital}</b></p>
+<p><b>Population: ${population} </b></p>
+<p><b>Languages: ${langs}</b></p>
+`;
 
   refs.countryInfo.innerHTML = markup;
 }
