@@ -17,25 +17,23 @@ function onInputText(e) {
   const inputValue = e.target.value.trim();
 
   fetchCountries(inputValue)
-    .then(data => {
-      const validCountriesList = data.length > 1 && data.length < 11;
+    .then(country => {
+      const validCountriesList = country.length > 1 && country.length < 11;
 
       refs.countryInfo.innerHTML = '';
       refs.countryList.innerHTML = '';
 
-      if (data.length > 10) {
-        Notiflix.Notify.info(
-          'Too many matches found. Please enter a more specific name.'
-        );
-      } else if (validCountriesList) {
-        renderCountryListMarkup(data);
-      } else if (data.length === 1) {
-        renderOneCountryMarkup(data[0]);
+      if (validCountriesList) {
+        renderCountryListMarkup(country);
+      } else if (country.length === 1) {
+        renderOneCountryMarkup(country[0]);
       } else {
-        Notiflix.Notify.failure('Oops, there is no country with that name');
+        findTooManyMatches();
       }
     })
-    .catch(error => console.log(error));
+    .catch(() => {
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+    });
 }
 
 function renderOneCountryMarkup({
@@ -55,11 +53,11 @@ function renderOneCountryMarkup({
   refs.countryInfo.innerHTML = markup;
 }
 
-function renderCountryListMarkup(data) {
-  data.forEach(({ flags, name }) => {
+function renderCountryListMarkup(country) {
+  country.forEach(({ flags, name }) => {
     const markup = `<img style="margin-right:10px;" src="${flags.svg}" alt="${name.official}" width="20" height="20" />
 <p style="margin:0;font-weight:500;">${name.official}</p>`;
-    console.log(data);
+
     const li = document.createElement('li');
     refs.countryList.append(li);
     li.innerHTML = markup;
@@ -71,4 +69,10 @@ function renderCountryListMarkup(data) {
     refs.countryList.style.padding = 0;
     refs.countryList.style.margin = 0;
   });
+}
+
+function findTooManyMatches() {
+  Notiflix.Notify.info(
+    'Too many matches found. Please enter a more specific name.'
+  );
 }
