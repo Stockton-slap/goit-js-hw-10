@@ -18,6 +18,8 @@ function onInputText(e) {
 
   fetchCountries(inputValue)
     .then(country => {
+      console.log(country);
+
       const validCountriesList = country.length > 1 && country.length < 11;
 
       refs.countryInfo.innerHTML = '';
@@ -31,7 +33,8 @@ function onInputText(e) {
         findTooManyMatches();
       }
     })
-    .catch(() => {
+    .catch(error => {
+      console.log(error);
       Notiflix.Notify.failure('Oops, there is no country with that name');
     });
 }
