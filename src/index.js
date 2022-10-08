@@ -16,27 +16,26 @@ refs.searchBox.addEventListener('input', debounce(onInputText, DEBOUNCE_DELAY));
 function onInputText(e) {
   const inputValue = e.target.value.trim();
 
-  fetchCountries(inputValue)
-    .then(country => {
-      console.log(country);
+  refs.countryInfo.innerHTML = '';
+  refs.countryList.innerHTML = '';
 
+  if (inputValue === '') {
+    return;
+  } else {
+    fetchCountries(inputValue).then(country => {
       const validCountriesList = country.length > 1 && country.length < 11;
-
-      refs.countryInfo.innerHTML = '';
-      refs.countryList.innerHTML = '';
 
       if (validCountriesList) {
         renderCountryListMarkup(country);
       } else if (country.length === 1) {
         renderOneCountryMarkup(country[0]);
-      } else {
+      } else if (country.status === 404) {
+        Notiflix.Notify.failure('Oops, there is no country with that name');
+      } else if (country.length > 10) {
         findTooManyMatches();
       }
-    })
-    .catch(error => {
-      console.log(error);
-      Notiflix.Notify.failure('Oops, there is no country with that name');
     });
+  }
 }
 
 function renderOneCountryMarkup({
